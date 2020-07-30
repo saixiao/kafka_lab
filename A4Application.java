@@ -44,17 +44,17 @@ public class A4Application {
 		KStream<String, String> studentLocationStreams = builder.stream(studentTopic);
 		KStream<String, String> classroomCapacities = builder.stream(classroomTopic);
 
-		KTable<String, String> studentLocations = studentLocationStreams
+		KTable<String, Long> studentLocations = studentLocationStreams
 				.flatMapValues(line -> Arrays.asList(line.toLowerCase().split(",")))
 				.groupBy((key, word) -> word)
-				.count(Materialized.<String, String, KeyValueStore<Bytes, Bytes>>as("student-location-store"));
+				.count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("student-location-store"));
 
 //		KTable<String, Long> wordCounts = studentLocations
 //				.flatMapValues(textLine-> Arrays.asList(textLine.toLowerCase().split(",")))
 //				.groupBy((key, word) -> word)
 //				.count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("counts-store"));
 
-		studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
+		studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Long()));
 
 	// ...
 	// ...to(outputTopic);
