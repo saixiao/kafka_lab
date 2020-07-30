@@ -69,11 +69,11 @@ public class A4Application {
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		)
 		.groupBy(
-				(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
-				Serialized.with(
-						Serdes.String(), /* key (note: type was modified) */
-						Serdes.Integer()
-				) /* value (note: type was modified) */
+			(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
+			Serialized.with(
+				Serdes.String(), /* key (note: type was modified) */
+				Serdes.Integer()
+			) /* value (note: type was modified) */
 		)
 		.count(
 				Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
