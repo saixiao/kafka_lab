@@ -67,7 +67,7 @@ public class A4Application {
 		.aggregate(
 			() -> 0L,
 			(aggKey, newValue, aggValue) -> newValue,
-			Materialized.as("student-location-store").withValueSerde(Serdes.String())
+			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		)
 		.groupBy(
 			(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
