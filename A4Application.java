@@ -44,7 +44,7 @@ public class A4Application {
 	KStream<String, String> studentLocationStreams = builder.stream(studentTopic);
 	KStream<String, String> classroomCapacities = builder.stream(classroomTopic);
 
-	KTable<String, String> studentLocations = studentLocationStreams
+	KTable<String, Long> studentLocations = studentLocationStreams
 		.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
 		.groupBy((studentName, roomNumber) -> studentName)
 		.reduce(
