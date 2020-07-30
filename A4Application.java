@@ -30,10 +30,10 @@ public class A4Application {
         Properties props = new Properties();
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, appName);
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-	props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
+		props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-	props.put(StreamsConfig.STATE_DIR_CONFIG, stateStoreDir);
+		props.put(StreamsConfig.STATE_DIR_CONFIG, stateStoreDir);
 
 	// add code here if you need any additional configuration options
 
@@ -41,17 +41,30 @@ public class A4Application {
 
 	// add code here
 	// 
-        // ... = builder.stream(studentTopic);
-        // ... = builder.stream(classroomTopic);
+		KStream<String, String> studentLocationStreams = builder.stream(studentTopic);
+		KStream<String, String> classroomCapacities = builder.stream(classroomTopic);
+
+		KTable<String, Long> studentLocations = studentLocationStreams
+				.flatMapValues(textLine -> Arrays.asList(textLine.toLowerCase().split(",")))
+				.groupBy((key, word) -> word)
+				.count(Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as(stateStoreDir));
+
+//		KTable<String, Long> wordCounts = studentLocations
+//				.flatMapValues(textLine-> Arrays.asList(textLine.toLowerCase().split(",")))
+//				.groupBy((key, word) -> word)
+//				.count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("counts-store"));
+
+		studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
+
 	// ...
 	// ...to(outputTopic);
 
         KafkaStreams streams = new KafkaStreams(builder.build(), props);
 
-	// this line initiates processing
-	streams.start();
+		// this line initiates processing
+		streams.start();
 
-	// shutdown hook for Ctrl+C
-	Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
+		// shutdown hook for Ctrl+C
+		Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
     }
 }
