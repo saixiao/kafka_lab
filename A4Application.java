@@ -76,8 +76,8 @@ public class A4Application {
 			)
 		)
 		.reduce(
-			(aggValue, newValue) -> aggValue + newValue, /* adder */
-			(aggValue, oldValue) -> aggValue - oldValue /* subtractor */
+			(aggValue, newValue) -> aggValue + 1, /* adder */
+			(aggValue, oldValue) -> aggValue - 1, /* subtractor */
 			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
 		);
 //		.count(
