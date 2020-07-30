@@ -45,9 +45,13 @@ public class A4Application {
 	KStream<String, String> classroomCapacities = builder.stream(classroomTopic);
 
 	KTable<String, Long> studentLocations = studentLocationStreams
-			.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
-//			.groupBy((studentName, roomNumber) -> roomNumber)
-			.count(Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store"));
+		.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
+		.groupBy((studentName, roomNumber) -> studentName)
+		.reduce(
+			(aggValue, newValue) -> aggValue + newValue, /* adder */
+			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
+		);
+//		.reduce(Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store"));
 
 //	KTable<String, Long> classCapacity = studentLocations
 //			.map((studentName, roomNumber) -> KeyValue.pair(classroom, classCapacity))
