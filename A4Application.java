@@ -47,12 +47,12 @@ public class A4Application {
 	KTable<String, Long> studentLocations = studentLocationStreams
 			.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
 			.groupBy((studentName, roomNumber) -> roomNumber)
-			.count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("student-location-store"));
+			.count(Materialized.<String, Long, KeyValueStore<String, Long>>as("student-location-store"));
 
-//		KTable<String, Long> wordCounts = studentLocations
-//				.flatMapValues(textLine-> Arrays.asList(textLine.toLowerCase().split(",")))
-//				.groupBy((key, word) -> word)
-//				.count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("counts-store"));
+//	KTable<String, Long> classCapacity = studentLocations
+//			.map((studentName, roomNumber) -> KeyValue.pair(classroom, classCapacity))
+//			.groupBy((key, word) -> word)
+//			.count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("capacity-store"));
 
 	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Long()));
 
