@@ -52,7 +52,13 @@ public class A4Application {
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		);
 
-	studentLocations.foreach((key, value) -> System.out.println(key + " => " + value));
+	KTable<String, Long> currentClassCapacity = studentLocations
+		.groupBy(
+			(studentName, roomNumber) -> roomNumber
+		)
+		.count(
+			Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
+		);
 //		.toStream()
 //		.groupBy((studentName, roomNumber) -> roomNumber)
 //		.count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-capacity-location-store"));
@@ -65,7 +71,7 @@ public class A4Application {
 //			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("class-capacity-store")
 //		);
 
-	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
+	currentClassCapacity.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Long()));
 
 // ...
 // ...to(outputTopic);
