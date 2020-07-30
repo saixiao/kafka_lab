@@ -70,7 +70,11 @@ public class A4Application {
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		)
 		.groupBy(
-			(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
+			(studentName, roomNumber) ->
+			{
+				System.out.println("!@#!@#!@#!@@#");
+				return KeyValue.pair(roomNumber, 1);
+			},
 			Serialized.with(
 				Serdes.String(),
 				Serdes.Integer()
