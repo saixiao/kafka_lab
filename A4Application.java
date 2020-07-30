@@ -50,14 +50,17 @@ public class A4Application {
 		.reduce(
 			(aggValue, newValue) -> newValue, /* adder */
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
-		);
+		)
+		.groupBy((studentName, roomNumber) -> roomNumber)
+		.count(Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("current-capacity-location-store"));
 
-	studentLocationStreams.foreach((key, value) -> System.out.println(key + " => " + value));
-//		.reduce(Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store"));
-//	KTable<String, Long> classCapacity = studentLocations
-//			.map((studentName, roomNumber) -> KeyValue.pair(classroom, classCapacity))
-//			.groupBy((key, word) -> word)
-//			.count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("capacity-store"));
+//	KTable<String, String> classCapacities = classroomCapacities
+//		.map((roomNumber, capacity) -> KeyValue.pair(roomNumber, capacity))
+//		.groupBy((roomNumber, capacity) -> roomNumber)
+//		.reduce(
+//			(aggValue, newValue) -> newValue, /* adder */
+//			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("class-capacity-store")
+//		);
 
 	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
 
