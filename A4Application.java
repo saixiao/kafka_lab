@@ -70,17 +70,24 @@ public class A4Application {
 		)
 		.toStream()
 		.groupBy(
-			(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
+			(studentName, roomNumber) -> roomNumber,
 			Serialized.with(
-				Serdes.String(), /* key (note: type was modified) */
+				Serdes.String(),
 				Serdes.Integer()
-			) /* value (note: type was modified) */
+			)
 		)
 		.reduce(
-			(aggValue, newValue) -> aggValue + newValue, /* adder */
-			(aggValue, oldValue) -> aggValue - oldValue,
+			(aggValue, newValue) -> aggValue + 1, /* adder */
+			(aggValue, oldValue) -> aggValue - 1,
 			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		);
+//		.groupBy(
+//			(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
+//			Serialized.with(
+//				Serdes.String(), /* key (note: type was modified) */
+//				Serdes.Integer()
+//			) /* value (note: type was modified) */
+//		)
 //		.count(
 //				Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
 //		);
