@@ -52,7 +52,7 @@ public class A4Application {
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		);
 //		.reduce(Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store"));
-
+	studentLocations.foreach((key, value) -> System.out.println(key + " => " + value));
 //	KTable<String, Long> classCapacity = studentLocations
 //			.map((studentName, roomNumber) -> KeyValue.pair(classroom, classCapacity))
 //			.groupBy((key, word) -> word)
