@@ -79,7 +79,7 @@ public class A4Application {
 				Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
 		);
 
-	classCapacities.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Long()));
+	classCapacities.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Integer()));
 
 // ...
 // ...to(outputTopic);
