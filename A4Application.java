@@ -27,43 +27,43 @@ public class A4Application {
 	String outputTopic = args[4];
 	String stateStoreDir = args[5];
 
-        Properties props = new Properties();
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, appName);
-        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-		props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
-        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
-		props.put(StreamsConfig.STATE_DIR_CONFIG, stateStoreDir);
+	Properties props = new Properties();
+	props.put(StreamsConfig.APPLICATION_ID_CONFIG, appName);
+	props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
+	props.put(StreamsConfig.CACHE_MAX_BYTES_BUFFERING_CONFIG, 0);
+	props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+	props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+	props.put(StreamsConfig.STATE_DIR_CONFIG, stateStoreDir);
 
 	// add code here if you need any additional configuration options
 
-        StreamsBuilder builder = new StreamsBuilder();
+	StreamsBuilder builder = new StreamsBuilder();
 
-	// add code here
-	// 
-		KStream<String, String> studentLocationStreams = builder.stream(studentTopic);
-		KStream<String, String> classroomCapacities = builder.stream(classroomTopic);
+// add code here
+//
+	KStream<String, String> studentLocationStreams = builder.stream(studentTopic);
+	KStream<String, String> classroomCapacities = builder.stream(classroomTopic);
 
-		KTable<String, Long> studentLocations = studentLocationStreams
-				.mapValues(textLine -> Arrays.asList(textLine.toLowerCase().split(",")))
-				.map(textLine -> KeyValue.pair(textLine.get(0), textLine.get(1)), Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>as("queryableStoreName"));
+	KTable<String, Long> studentLocations = studentLocationStreams
+			.mapValues(textLine -> Arrays.asList(textLine.toLowerCase().split(",")))
+			.map(textLine -> KeyValue.pair(textLine.get(0), textLine.get(1)), Materialized.<String, String, KeyValueStore<Bytes, byte[]>as("queryableStoreName"));
 
 //		KTable<String, Long> wordCounts = studentLocations
 //				.flatMapValues(textLine-> Arrays.asList(textLine.toLowerCase().split(",")))
 //				.groupBy((key, word) -> word)
 //				.count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("counts-store"));
 
-		studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
+	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
 
-	// ...
-	// ...to(outputTopic);
+// ...
+// ...to(outputTopic);
 
-        KafkaStreams streams = new KafkaStreams(builder.build(), props);
+	KafkaStreams streams = new KafkaStreams(builder.build(), props);
 
-		// this line initiates processing
-		streams.start();
+	// this line initiates processing
+	streams.start();
 
-		// shutdown hook for Ctrl+C
-		Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
+	// shutdown hook for Ctrl+C
+	Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
     }
 }
