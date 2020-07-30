@@ -54,7 +54,10 @@ public class A4Application {
 
 	KTable<String, Long> currentClassCapacity = studentLocations
 		.groupBy(
-			(studentName, roomNumber) -> roomNumber
+			(studentName, roomNumber) -> roomNumber,
+			Serialized.with(
+				Serdes.String(), /* key (note: type was modified) */
+				Serdes.String()) /* value (note: type was modified) */
 		)
 		.count(
 			Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
