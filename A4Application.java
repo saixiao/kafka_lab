@@ -44,7 +44,7 @@ public class A4Application {
 	KStream<String, String> studentLocationStreams = builder.stream(studentTopic);
 	KStream<String, String> classroomCapacities = builder.stream(classroomTopic);
 
-	KTable<String, Long> studentLocations = studentLocationStreams
+	KTable<String, String> studentLocations = studentLocationStreams
 		.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
 		.groupBy((studentName, roomNumber) -> studentName)
 		.reduce(
@@ -58,7 +58,7 @@ public class A4Application {
 //			.groupBy((key, word) -> word)
 //			.count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("capacity-store"));
 
-	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Long()));
+	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), String.Long()));
 
 // ...
 // ...to(outputTopic);
