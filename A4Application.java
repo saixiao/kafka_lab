@@ -48,7 +48,7 @@ public class A4Application {
 		.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
 		.groupBy((studentName, roomNumber) -> studentName)
 		.reduce(
-			(aggValue, newValue) -> aggValue + newValue, /* adder */
+			(aggValue, newValue) -> newValue, /* adder */
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		);
 //		.reduce(Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store"));
