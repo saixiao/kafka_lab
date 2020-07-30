@@ -68,7 +68,6 @@ public class A4Application {
 			(aggValue, newValue) -> newValue, /* adder */
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		)
-		.toStream()
 		.groupBy(
 			(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
 			Serialized.with(
