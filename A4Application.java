@@ -65,9 +65,9 @@ public class A4Application {
 				Serdes.String())     /* value */
 		)
 		.aggregate(
-			() -> 0L, /* initializer */
+			() -> 0L,
 			(aggKey, newValue, aggValue) -> newValue,
-			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
+			Materialized.as("student-location-store").withValueSerde(Serdes.String())
 		)
 		.groupBy(
 			(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
