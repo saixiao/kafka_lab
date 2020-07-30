@@ -45,7 +45,7 @@ public class A4Application {
 	KStream<String, String> studentLocationStreams = builder.stream(studentTopic);
 	KStream<String, String> classroomCapacities = builder.stream(classroomTopic);
 
-	KTable<String, String> classCapacities = classroomCapacities
+	KTable<String, Integer> classCapacities = classroomCapacities
 		.map((roomNumber, capacity) -> KeyValue.pair(roomNumber, Integer.parseInt(capacity)))
 		.groupByKey(
 			Serialized.with(
@@ -53,7 +53,7 @@ public class A4Application {
 				Serdes.Integer())     /* value */
 		)
 		.reduce(
-			(aggValue, newValue) -> newValue, /* adder */
+			(aggValue, newValue) -> newValue,
 			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("class-capacity-store")
 		);
 
