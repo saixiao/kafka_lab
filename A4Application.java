@@ -57,7 +57,7 @@ public class A4Application {
 //			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("class-capacity-store")
 //		);
 
-	KTable<String, Integer> studentLocations = studentLocationStreams
+	KTable<String, Long> studentLocations = studentLocationStreams
 		.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
 		.groupByKey(
 			Serialized.with(
@@ -79,7 +79,7 @@ public class A4Application {
 				Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
 		);
 
-	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Integer()));
+	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Long()));
 
 // ...
 // ...to(outputTopic);
