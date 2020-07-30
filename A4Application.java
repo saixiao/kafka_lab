@@ -75,14 +75,9 @@ public class A4Application {
 				Serdes.Integer()
 			)
 		)
-		.reduce(
-			(aggValue, newValue) -> aggValue + 1, /* adder */
-			(aggValue, oldValue) -> aggValue - 1, /* subtractor */
-			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
+		.count(
+			Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
 		);
-//		.count(
-//			Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
-//		);
 
 	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Integer()));
 
