@@ -47,7 +47,7 @@ public class A4Application {
 	KTable<String, Long> studentLocations = studentLocationStreams
 			.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
 //			.groupBy((studentName, roomNumber) -> roomNumber)
-			.count(Materialized.<String, String, KeyValueStore<Bytes, bytes[]>>as("student-location-store"));
+			.count(Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store"));
 
 //	KTable<String, Long> classCapacity = studentLocations
 //			.map((studentName, roomNumber) -> KeyValue.pair(classroom, classCapacity))
