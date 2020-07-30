@@ -80,7 +80,7 @@ public class A4Application {
 			(aggValue, newValue) -> aggValue + newValue, /* adder */
 			(aggValue, oldValue) -> aggValue - oldValue,
 			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("student-location-store")
-		)
+		);
 //		.count(
 //				Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
 //		);
