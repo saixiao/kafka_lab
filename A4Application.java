@@ -47,7 +47,7 @@ public class A4Application {
 		KTable<String, Long> studentLocations = studentLocationStreams
 				.flatMapValues(textLine -> Arrays.asList(textLine.toLowerCase().split(",")))
 				.groupBy((key, word) -> word)
-				.count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("student-location-store"));
+				.count(Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store"));
 
 //		KTable<String, Long> wordCounts = studentLocations
 //				.flatMapValues(textLine-> Arrays.asList(textLine.toLowerCase().split(",")))
