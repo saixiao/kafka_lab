@@ -47,11 +47,7 @@ public class A4Application {
 
 	KTable<String, Integer> classCapacities = classroomCapacities
 		.map((roomNumber, capacity) -> KeyValue.pair(roomNumber, capacity))
-		.groupByKey(
-			Serialized.with(
-				Serdes.String(), /* key */
-				Serdes.Integer())     /* value */
-		)
+		.groupByKey()
 		.reduce(
 			(aggValue, newValue) -> newValue, /* adder */
 			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("class-capacity-store")
