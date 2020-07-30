@@ -75,7 +75,7 @@ public class A4Application {
 		.reduce(
 			(aggValue, newValue) -> aggValue + 1, /* adder */
 			(aggValue, oldValue) -> aggValue - 1,
-			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("student-location-store")
+			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
 		);
 //		.groupBy(
 //			(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
