@@ -67,7 +67,7 @@ public class A4Application {
 		.reduce(
 			(aggValue, newValue) -> {
 				if(newValue != aggValue){
-					return newValue
+					return newValue;
 				} else {
 					System.out.println("SAME VALUE");
 				}
