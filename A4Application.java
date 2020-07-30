@@ -45,9 +45,9 @@ public class A4Application {
 	KStream<String, String> classroomCapacities = builder.stream(classroomTopic);
 
 	KTable<String, Long> studentLocations = studentLocationStreams
-			.mapValues(textLine -> Arrays.asList(textLine.toLowerCase().split(",")))
-			.mapValues(textLine -> KeyValue.pair(textLine.get(0), textLine.get(1)))
-			.to("student-location-store");
+			.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
+			.groupBy((studentName, roomNumber) -> roomNumber)
+			.count(Materialized.<String, Long, KeyValueStore<Byte, byte[]>>as("student-location-store"));
 
 //		KTable<String, Long> wordCounts = studentLocations
 //				.flatMapValues(textLine-> Arrays.asList(textLine.toLowerCase().split(",")))
