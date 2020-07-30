@@ -70,10 +70,10 @@ public class A4Application {
 		)
 		.toStream()
 		.groupBy(
-			(studentName, roomNumber) -> roomNumber,
+			(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
 			Serialized.with(
 				Serdes.String(),
-				Serdes.String()
+				Serdes.Integer()
 			)
 		)
 		.reduce(
