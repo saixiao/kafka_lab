@@ -58,7 +58,7 @@ public class A4Application {
 			(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
 			Serialized.with(
 				Serdes.String(), /* key (note: type was modified) */
-				Serdes.String()) /* value (note: type was modified) */
+				Serdes.Long()) /* value (note: type was modified) */
 		)
 		.count(
 			Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
