@@ -57,7 +57,7 @@ public class A4Application {
 //			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("class-capacity-store")
 //		);
 
-	KTable<String, Long> studentLocations = studentLocationStreams
+	KTable<String, Integer> studentLocations = studentLocationStreams
 		.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
 		.groupByKey(
 			Serialized.with(
@@ -68,6 +68,7 @@ public class A4Application {
 			(aggValue, newValue) -> newValue, /* adder */
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		)
+		.toStream()
 		.groupBy(
 			(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
 			Serialized.with(
@@ -75,23 +76,16 @@ public class A4Application {
 				Serdes.Integer()
 			) /* value (note: type was modified) */
 		)
-		.count(
-				Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
-		);
-
-//	KTable<String, Long> currentClassCapacity = studentLocations
-//		.groupBy(
-//			(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
-//			Serialized.with(
-//				Serdes.String(), /* key (note: type was modified) */
-//				Serdes.Integer()
-//			) /* value (note: type was modified) */
-//		)
+		.reduce(
+			(aggValue, newValue) -> aggValue + newValue, /* adder */
+			(aggValue, oldValue) -> aggValue - oldValue,
+			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("student-location-store")
+		)
 //		.count(
-//			Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
+//				Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
 //		);
 
-	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Long()));
+	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Integer()));
 
 // ...
 // ...to(outputTopic);
