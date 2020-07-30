@@ -53,7 +53,7 @@ public class A4Application {
 		)
 		.toStream()
 		.groupBy((studentName, roomNumber) -> roomNumber)
-		.count(Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("current-capacity-location-store"));
+		.count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-capacity-location-store"));
 
 //	KTable<String, String> classCapacities = classroomCapacities
 //		.map((roomNumber, capacity) -> KeyValue.pair(roomNumber, capacity))
@@ -63,7 +63,7 @@ public class A4Application {
 //			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("class-capacity-store")
 //		);
 
-	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
+	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Long()));
 
 // ...
 // ...to(outputTopic);
