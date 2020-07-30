@@ -73,7 +73,7 @@ public class A4Application {
 			(studentName, roomNumber) -> roomNumber,
 			Serialized.with(
 				Serdes.String(),
-				Serdes.Integer()
+				Serdes.String()
 			)
 		)
 		.reduce(
