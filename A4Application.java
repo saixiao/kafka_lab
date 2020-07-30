@@ -55,7 +55,7 @@ public class A4Application {
 
 	KTable<String, Long> currentClassCapacity = studentLocations
 		.groupBy(
-			(studentName, roomNumber) -> KeyValue.pair(roomNumber, studentName),
+			(studentName, roomNumber) -> KeyValue.pair(roomNumber, 1),
 			Serialized.with(
 				Serdes.String(), /* key (note: type was modified) */
 				Serdes.String()) /* value (note: type was modified) */
