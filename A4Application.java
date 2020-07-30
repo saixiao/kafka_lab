@@ -72,7 +72,7 @@ public class A4Application {
 		.groupBy(
 			(studentName, roomNumber) ->
 			{
-				System.out.println("!@#!@#!@#!@@#");
+				System.out.println(studentName, roomNumber);
 				return KeyValue.pair(roomNumber, 1);
 			},
 			Serialized.with(
