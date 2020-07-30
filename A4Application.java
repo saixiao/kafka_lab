@@ -45,17 +45,17 @@ public class A4Application {
 	KStream<String, String> studentLocationStreams = builder.stream(studentTopic);
 	KStream<String, String> classroomCapacities = builder.stream(classroomTopic);
 
-//	KTable<String, String> classCapacities = classroomCapacities
-//		.map((roomNumber, capacity) -> KeyValue.pair(roomNumber, capacity))
-//		.groupByKey(
-//			Serialized.with(
-//				Serdes.String(), /* key */
-//				Serdes.Integer())     /* value */
-//		)
-//		.reduce(
-//			(aggValue, newValue) -> newValue, /* adder */
-//			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("class-capacity-store")
-//		);
+	KTable<String, String> classCapacities = classroomCapacities
+		.map((roomNumber, capacity) -> KeyValue.pair(roomNumber, capacity))
+		.groupByKey(
+			Serialized.with(
+				Serdes.String(), /* key */
+				Serdes.Integer())     /* value */
+		)
+		.reduce(
+			(aggValue, newValue) -> newValue, /* adder */
+			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("class-capacity-store")
+		);
 
 	KTable<String, Long> studentLocations = studentLocationStreams
 		.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
