@@ -40,8 +40,6 @@ public class A4Application {
 
 	StreamsBuilder builder = new StreamsBuilder();
 
-// add code here
-//
 	KStream<String, String> studentLocationStreams = builder.stream(studentTopic);
 	KStream<String, String> classroomCapacities = builder.stream(classroomTopic);
 
@@ -49,8 +47,8 @@ public class A4Application {
 		.map((roomNumber, capacity) -> KeyValue.pair(roomNumber, Integer.parseInt(capacity)))
 		.groupByKey(
 			Serialized.with(
-				Serdes.String(), /* key */
-				Serdes.Integer())     /* value */
+				Serdes.String(),
+				Serdes.Integer())
 		)
 		.reduce(
 			(aggValue, newValue) -> newValue,
@@ -61,11 +59,14 @@ public class A4Application {
 		.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
 		.groupByKey(
 			Serialized.with(
-				Serdes.String(), /* key */
-				Serdes.String())     /* value */
+				Serdes.String(),
+				Serdes.String())
 		)
 		.reduce(
-			(aggValue, newValue) -> newValue, /* adder */
+			(aggValue, newValue) -> {
+				System.out.println("!@#!@#!@#!@@#");
+				return newValue
+			}, /* adder */
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		)
 		.groupBy(
@@ -78,6 +79,8 @@ public class A4Application {
 		.count(
 			Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
 		);
+
+
 
 	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Long()));
 
