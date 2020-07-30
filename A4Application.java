@@ -46,7 +46,7 @@ public class A4Application {
 
 	KTable<String, Long> studentLocations = studentLocationStreams
 			.mapValues(textLine -> Arrays.asList(textLine.toLowerCase().split(",")))
-			.map(textLine -> KeyValue.pair(textLine.get(0), textLine.get(1)))
+			.mapValues(textLine -> KeyValue.pair(textLine.get(0), textLine.get(1)))
 			.to(Materialized.<String, String, KeyValueStore<String, String>>as("student-location-store"));
 
 //		KTable<String, Long> wordCounts = studentLocations
