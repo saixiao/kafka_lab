@@ -64,14 +64,9 @@ public class A4Application {
 				Serdes.String(), /* key */
 				Serdes.String())     /* value */
 		)
-		.reduce(
-			(aggValue, newValue) {
-				if(newValue != aggValue){
-					return newValue;
-				} else {
-					System.out.println("SAME VALUE");
-				}
-			}, /* adder */
+		.aggregate(
+			() -> 0L, /* initializer */
+			(aggKey, newValue, aggValue) -> newValue,
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		)
 		.groupBy(
