@@ -10,6 +10,7 @@ import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 import org.apache.kafka.streams.kstream.TimeWindows;
+import org.apache.kafka.streams.kstream.Serialized;
 import org.apache.kafka.streams.state.KeyValueStore;
 
 import java.util.Arrays;
@@ -53,13 +54,13 @@ public class A4Application {
 		);
 
 	KTable<String, Long> currentClassCapacity = studentLocations
-//		.groupBy(
-//			(studentName, roomNumber) -> roomNumber,
-//			Serialized.with(
-//				Serdes.String(), /* key (note: type was modified) */
-//				Serdes.String()) /* value (note: type was modified) */
-//		)
-		.groupBy((studentName, roomNumber) -> roomNumber)
+		.groupBy(
+			(studentName, roomNumber) -> roomNumber,
+			Serialized.with(
+				Serdes.String(), /* key (note: type was modified) */
+				Serdes.String()) /* value (note: type was modified) */
+		)
+//		.groupBy((studentName, roomNumber) -> roomNumber)
 		.count(
 			Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-class-capacity")
 		);
