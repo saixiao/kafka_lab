@@ -58,7 +58,7 @@ public class A4Application {
 //			.groupBy((key, word) -> word)
 //			.count(Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("capacity-store"));
 
-	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), String.Long()));
+	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), String.String()));
 
 // ...
 // ...to(outputTopic);
