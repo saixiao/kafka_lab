@@ -65,7 +65,7 @@ public class A4Application {
 				Serdes.String())     /* value */
 		)
 		.reduce(
-			(aggValue, newValue) -> {
+			(aggValue, newValue) {
 				if(newValue != aggValue){
 					return newValue;
 				} else {
