@@ -50,8 +50,9 @@ public class A4Application {
 		.reduce(
 			(aggValue, newValue) -> newValue, /* adder */
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
-		)
-		.foreach((key, value) -> System.out.println(key + " => " + value));;
+		);
+
+	studentLocationStreams.foreach((key, value) -> System.out.println(key + " => " + value));
 //		.reduce(Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store"));
 //	KTable<String, Long> classCapacity = studentLocations
 //			.map((studentName, roomNumber) -> KeyValue.pair(classroom, classCapacity))
