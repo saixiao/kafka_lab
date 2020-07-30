@@ -51,6 +51,7 @@ public class A4Application {
 			(aggValue, newValue) -> newValue, /* adder */
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		)
+		.toStream()
 		.groupBy((studentName, roomNumber) -> roomNumber)
 		.count(Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("current-capacity-location-store"));
 
