@@ -65,7 +65,6 @@ public class A4Application {
 		.reduce(
 			(aggValue, newValue) -> {
 				System.out.println("!@#!@#!@#!@@#");
-				if(newValue == aggValue)
 				return newValue;
 			}, /* adder */
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
