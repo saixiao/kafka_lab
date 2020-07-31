@@ -100,9 +100,7 @@ public class A4Application {
 			(maxCapacity, currentSize) -> maxCapacity + "-" + currentSize
 		)
 		.aggregate(
-			() -> {
-				""
-			}, /* initializer */
+			() -> "", /* initializer */
 			(aggKey, newValue, aggValue) -> {
 				System.out.println("Add to " + aggKey + " new Value:  " + newValue + " agg Value: " + aggValue);
 				return aggValue + newValue;
