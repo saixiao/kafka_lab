@@ -97,8 +97,18 @@ public class A4Application {
 
 	KTable<String, String> joinedTable = classCapacities
 		.join(studentLocations,
-			(leftValue, rightValue) -> "Left: " + leftValue + " Right:" + rightValue
-		);
+			(maxCapacity, currentSize) -> maxCapacity + "-" + currentSize
+		)
+		.filter((classroom, value) -> {
+			String[] s = value.split("-");
+			int maxCapacity = Integer.parseInt(s[0]);
+			int currentSize = Integer.parseInt(s[1]);
+			if(currentSize > maxCapacity) {
+				return true;
+			}
+			return false;
+		});
+
 
 	joinedTable.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
 
