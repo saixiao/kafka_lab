@@ -102,7 +102,6 @@ public class A4Application {
 		.groupBy(
 			(classroom, capacities) ->
 			{
-				System.out.println(studentName + roomNumber);
 				return KeyValue.pair(classroom, capacities);
 			},
 			Grouped.with(
