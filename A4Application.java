@@ -82,9 +82,17 @@ public class A4Application {
 		)
 		.aggregate(
 			() -> 0, /* initializer */
-			(aggKey, newValue, aggValue) -> aggValue + newValue,
-			(aggKey, oldValue, aggValue) -> aggValue - oldValue,
-			Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-classroom-capacity")
+			(aggKey, newValue, aggValue) -> {
+				System.out.println("Add to " + aggKey);
+				return aggValue + newValue
+			},
+			(aggKey, oldValue, aggValue) -> {
+				System.out.println("Subtract From " + aggKey);
+				return aggValue - oldValue
+			},
+			Materialized.<String, Long, KeyValueStore<Bytes, byte[]>as("current-class-capacity" /* state store name */)
+					.withKeySerde(Serdes.String()) /* key serde */
+					.withValueSerde(Serdes.Long()); /* serde for aggregate value */
 		);
 
 
