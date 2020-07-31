@@ -113,11 +113,11 @@ public class A4Application {
 				int currentSize = Integer.parseInt(s[1]);
 
 				if(currentSize > maxCapacity) {
-					return currentSize.toString()
+					return currentSize.toString();
 				} else if (currentSize == maxCapacity && !aggValue.equals("") && !aggValue.equals("OK")){
-					return "OK"
+					return "OK";
 				} else {
-					return ""
+					return "";
 				}
 			},
 			(aggKey, newValue, aggValue) -> {
@@ -126,11 +126,11 @@ public class A4Application {
 				int currentSize = Integer.parseInt(s[1]);
 
 				if(currentSize > maxCapacity) {
-					return currentSize.toString()
+					return currentSize.toString();
 				} else if (currentSize == maxCapacity && !aggValue.equals("") && !aggValue.equals("OK")){
-					return "OK"
+					return "OK";
 				} else {
-					return ""
+					return "";
 				}
 			},
 			(aggKey, oldValue, aggValue) -> aggValue,
