@@ -122,7 +122,7 @@ public class A4Application {
 	KTable<String, String> joinedTable = classCapacities
 		.join(studentLocations,
 			(leftValue, rightValue) -> "Left: " + leftValue + " Right:" + rightValue
-		)
+		);
 
 	joinedTable.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
 
