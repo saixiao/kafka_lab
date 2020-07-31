@@ -103,7 +103,7 @@ public class A4Application {
 		.groupByKey()
 		.aggregate(
 			() -> "", /* initializer */
-			(aggValue, newValue) -> {
+			(aggKey, newValue, aggValue) -> {
 				String[] s = newValue.split("-");
 				int maxCapacity = Integer.parseInt(s[0]);
 				int currentSize = Integer.parseInt(s[1]);
