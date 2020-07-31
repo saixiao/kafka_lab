@@ -56,19 +56,30 @@ public class A4Application {
 		);
 
 	KTable<String, Integer> studentLocations = studentLocationStreams
-		.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
-//		.groupByKey(
+//		.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
+		.groupByKey(
+			Serialized.with(
+				Serdes.String(),
+				Serdes.String())
+		)
+		.reduce(
+			(aggValue, newValue) -> {
+				System.out.println("!@#!@#!@#!@@#");
+				if(newValue == aggValue)
+				return newValue;
+			}, /* adder */
+			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
+		)
+//		.groupBy(
+//			(studentName, roomNumber) ->
+//			{
+//				System.out.println(studentName + roomNumber);
+//				return KeyValue.pair(roomNumber, 1);
+//			},
 //			Serialized.with(
 //				Serdes.String(),
-//				Serdes.String())
-//		)
-//		.reduce(
-//			(aggValue, newValue) -> {
-//				System.out.println("!@#!@#!@#!@@#");
-//				if(newValue == aggValue)
-//				return newValue;
-//			}, /* adder */
-//			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
+//				Serdes.Integer()
+//			)
 //		)
 		.groupBy(
 			(studentName, roomNumber) ->
