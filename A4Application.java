@@ -94,30 +94,6 @@ public class A4Application {
 					.withValueSerde(Serdes.Integer())
 		);
 
-	KTable<String, Integer> studentLocations = studentLocationStreams
-		.groupByKey(
-			Serialized.with(
-				Serdes.String(),
-				Serdes.String())
-		)
-		.reduce(
-			(aggValue, newValue) -> {
-				return newValue;
-			}, /* adder */
-			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
-		)
-		.groupBy(
-			(studentName, roomNumber) ->
-			{
-				System.out.println(studentName + roomNumber);
-				return KeyValue.pair(roomNumber, 1);
-			},
-			Grouped.with(
-				Serdes.String(),
-				Serdes.Integer()
-			)
-		);
-
 
 	KTable<String, String> joinedTable = classCapacities
 		.join(studentLocations,
