@@ -121,11 +121,12 @@ public class A4Application {
 					return "";
 				}
 			},
-			(aggKey, oldValue, aggValue) -> aggValue,
+//			(aggKey, oldValue, aggValue) -> aggValue,
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("output-store" /* state store name */)
 					.withKeySerde(Serdes.String())
 					.withValueSerde(Serdes.String())
-		);
+		)
+		.filter((classroom, result) -> result.length() != 0);
 
 
 	joinedTable.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
