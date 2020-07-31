@@ -69,24 +69,13 @@ public class A4Application {
 			}, /* adder */
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		)
-//		.groupBy(
-//			(studentName, roomNumber) ->
-//			{
-//				System.out.println(studentName + roomNumber);
-//				return KeyValue.pair(roomNumber, 1);
-//			},
-//			Serialized.with(
-//				Serdes.String(),
-//				Serdes.Integer()
-//			)
-//		)
 		.groupBy(
 			(studentName, roomNumber) ->
 			{
 				System.out.println(studentName + roomNumber);
 				return KeyValue.pair(roomNumber, 1);
 			},
-			Serialized.with(
+			Grouped.with(
 				Serdes.String(),
 				Serdes.Integer()
 			)
