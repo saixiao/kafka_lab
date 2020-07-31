@@ -91,8 +91,8 @@ public class A4Application {
 				return aggValue - oldValue;
 			},
 			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("current-class-capacity" /* state store name */)
-//					.withKeySerde(Serdes.String()) /* key serde */
-//					.withValueSerde(Serdes.Long()) /* serde for aggregate value */
+					.withKeySerde(Serdes.String()) /* key serde */
+					.withValueSerde(Serdes.Integer()) /* serde for aggregate value */
 		);
 
 
