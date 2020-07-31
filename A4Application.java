@@ -101,7 +101,8 @@ public class A4Application {
 		)
 		.toStream()
 		.groupByKey()
-		.reduce(
+		.aggregate(
+			() -> "", /* initializer */
 			(aggValue, newValue) -> {
 				String[] s = newValue.split("-");
 				int maxCapacity = Integer.parseInt(s[0]);
