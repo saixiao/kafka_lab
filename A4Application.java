@@ -103,6 +103,7 @@ public class A4Application {
 			String[] s = value.split("-");
 			int maxCapacity = Integer.parseInt(s[0]);
 			int currentSize = Integer.parseInt(s[1]);
+			System.out.println("Filtering " + maxCapacity + " " + currentSize);
 			if(currentSize > maxCapacity) {
 				return true;
 			}
