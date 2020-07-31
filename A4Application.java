@@ -86,8 +86,8 @@ public class A4Application {
 			(aggKey, oldValue, aggValue) -> aggValue - oldValue,
 			Materialized.<String, Long, KeyValueStore<Bytes, byte[]>>as("current-classroom-capacity")
 				.withKeySerde(Serdes.String()) /* key serde */
-				.withValueSerde(Serdes.Integer()); /* serde for aggregate value */
-		)
+				.withValueSerde(Serdes.Integer()) /* serde for aggregate value */
+		);
 
 
 
