@@ -115,7 +115,7 @@ public class A4Application {
 					return "";
 				}
 			},
-			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
+			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("output-store")
 		)
 		.filter((classroom, result) -> result.length() != 0);
 
