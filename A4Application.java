@@ -107,19 +107,7 @@ public class A4Application {
 			)
 		)
 		.aggregate(
-			() -> {
-				String[] s = newValue.split("-");
-				int maxCapacity = Integer.parseInt(s[0]);
-				int currentSize = Integer.parseInt(s[1]);
-
-				if(currentSize > maxCapacity) {
-					return Integer.toString(currentSize);
-				} else if (currentSize == maxCapacity && !aggValue.equals("") && !aggValue.equals("OK")){
-					return "OK";
-				} else {
-					return "";
-				}
-			},
+			() -> "",
 			(aggKey, newValue, aggValue) -> {
 				String[] s = newValue.split("-");
 				int maxCapacity = Integer.parseInt(s[0]);
