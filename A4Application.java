@@ -57,7 +57,6 @@ public class A4Application {
 		);
 
 	KTable<String, Integer> studentLocations = studentLocationStreams
-//		.map((studentName, roomNumber) -> KeyValue.pair(studentName, roomNumber))
 		.groupByKey(
 			Serialized.with(
 				Serdes.String(),
@@ -65,7 +64,6 @@ public class A4Application {
 		)
 		.reduce(
 			(aggValue, newValue) -> {
-				System.out.println("!@#!@#!@#!@@#");
 				return newValue;
 			}, /* adder */
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
@@ -92,13 +90,41 @@ public class A4Application {
 				return aggValue - oldValue;
 			},
 			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("current-class-capacity" /* state store name */)
-					.withKeySerde(Serdes.String()) /* key serde */
-					.withValueSerde(Serdes.Integer()) /* serde for aggregate value */
+					.withKeySerde(Serdes.String())
+					.withValueSerde(Serdes.Integer())
+		);
+
+	KTable<String, Integer> studentLocations = studentLocationStreams
+		.groupByKey(
+			Serialized.with(
+				Serdes.String(),
+				Serdes.String())
+		)
+		.reduce(
+			(aggValue, newValue) -> {
+				return newValue;
+			}, /* adder */
+			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
+		)
+		.groupBy(
+			(studentName, roomNumber) ->
+			{
+				System.out.println(studentName + roomNumber);
+				return KeyValue.pair(roomNumber, 1);
+			},
+			Grouped.with(
+				Serdes.String(),
+				Serdes.Integer()
+			)
 		);
 
 
+	KTable<String, String> joinedTable = classCapacities
+		.join(studentLocations,
+			(leftValue, rightValue) -> "Left: " + leftValue + " Right:" + rightValue
+		)
 
-	studentLocations.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.Integer()));
+	joinedTable.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
 
 // ...
 // ...to(outputTopic);
