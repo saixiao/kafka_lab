@@ -117,6 +117,7 @@ public class A4Application {
 			},
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("output-store")
 		)
+		.toStream()
 		.filter((classroom, result) -> result.length() != 0);
 
 
