@@ -14,6 +14,6 @@ ${KAFKA_HOME}/bin/kafka-console-consumer.sh \
     --property key.separator=, \
     --from-beginning \
     --property key.deserializer=org.apache.kafka.common.serialization.StringDeserializer \
-    --property value.deserializer=org.apache.kafka.common.serialization.LongDeserializer
+    --property value.deserializer=org.apache.kafka.common.serialization.IntegerDeserializer
 
 #    --formatter kafka.tools.DefaultMessageFormatter \
