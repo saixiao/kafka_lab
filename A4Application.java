@@ -95,7 +95,7 @@ public class A4Application {
 		);
 
 
-	KTable<String, String> joinedTable = classCapacities
+	KStream<String, String> joinedStream = classCapacities
 		.join(studentLocations,
 			(maxCapacity, currentSize) -> maxCapacity + "-" + currentSize
 		)
@@ -121,7 +121,7 @@ public class A4Application {
 		.filter((classroom, result) -> result.length() != 0);
 
 
-	joinedTable.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
+	joinedStream.to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
 
 // ...
 // ...to(outputTopic);
