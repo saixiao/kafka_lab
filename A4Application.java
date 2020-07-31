@@ -99,6 +99,7 @@ public class A4Application {
 		.join(studentLocations,
 			(maxCapacity, currentSize) -> maxCapacity + "-" + currentSize
 		)
+		.groupByKey()
 		.aggregate(
 			() -> "", /* initializer */
 			(aggKey, newValue, aggValue) -> {
@@ -106,7 +107,7 @@ public class A4Application {
 				return aggValue + newValue;
 			},
 			(aggKey, oldValue, aggValue) -> {
-				System.out.println("Subtract From " + aggKey + " new Value:  " + newValue + " agg Value: " + aggValue);
+				System.out.println("Subtract From " + aggKey + " new Value:  " + oldValue + " agg Value: " + aggValue);
 				return aggValue - oldValue;
 			},
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("output-store" /* state store name */)
