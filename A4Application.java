@@ -106,9 +106,8 @@ public class A4Application {
 					Serdes.String()
 			)
 		)
-		.aggregate(
-			() -> "",
-			(aggKey, newValue, aggValue) -> {
+		.reduce(
+			(aggValue, newValue) -> {
 				String[] s = newValue.split("-");
 				int maxCapacity = Integer.parseInt(s[0]);
 				int currentSize = Integer.parseInt(s[1]);
@@ -121,7 +120,6 @@ public class A4Application {
 					return "";
 				}
 			},
-//			(aggKey, oldValue, aggValue) -> aggValue,
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("output-store" /* state store name */)
 					.withKeySerde(Serdes.String())
 					.withValueSerde(Serdes.String())
