@@ -99,7 +99,17 @@ public class A4Application {
 		.join(studentLocations,
 			(maxCapacity, currentSize) -> maxCapacity + "-" + currentSize
 		)
-		.groupByKey()
+		.groupBy(
+			(classroom, capacities) ->
+			{
+				System.out.println(studentName + roomNumber);
+				return KeyValue.pair(classroom, capacities);
+			},
+			Grouped.with(
+					Serdes.String(),
+					Serdes.String()
+			)
+		)
 		.aggregate(
 			() -> "", /* initializer */
 			(aggKey, newValue, aggValue) -> {
