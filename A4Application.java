@@ -99,13 +99,8 @@ public class A4Application {
 		.join(studentLocations,
 			(maxCapacity, currentSize) -> maxCapacity + "-" + currentSize
 		)
-		.groupBy(
-			(classroom, capacities) -> KeyValue.pair(classroom, capacities),
-			Grouped.with(
-				Serdes.String(),
-				Serdes.String()
-			)
-		)
+		.toStream()
+		.groupByKey()
 		.reduce(
 			(aggValue, newValue) -> {
 				String[] s = newValue.split("-");
@@ -120,7 +115,7 @@ public class A4Application {
 					return "";
 				}
 			},
-			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("output-store" /* state store name */)
+			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		)
 		.filter((classroom, result) -> result.length() != 0);
 
