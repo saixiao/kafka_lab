@@ -109,7 +109,7 @@ public class A4Application {
 				System.out.println("Subtract From " + aggKey + " new Value:  " + newValue + " agg Value: " + aggValue);
 				return aggValue - oldValue;
 			},
-			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("output-store" /* state store name */)
+			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("output-store" /* state store name */)
 					.withKeySerde(Serdes.String())
 					.withValueSerde(Serdes.String())
 		)
