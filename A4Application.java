@@ -100,39 +100,44 @@ public class A4Application {
 			(maxCapacity, currentSize) -> maxCapacity + "-" + currentSize
 		)
 		.groupBy(
-			(classroom, capacities) ->
-			{
-				return KeyValue.pair(classroom, capacities);
-			},
+			(classroom, capacities) -> KeyValue.pair(classroom, capacities),
 			Grouped.with(
 					Serdes.String(),
 					Serdes.String()
 			)
 		)
 		.aggregate(
-			() -> "", /* initializer */
+			() -> {
+				String[] s = newValue.split("-");
+				int maxCapacity = Integer.parseInt(s[0]);
+				int currentSize = Integer.parseInt(s[1]);
+
+				if(currentSize > maxCapacity) {
+					return currentSize.toString()
+				} else if (currentSize == maxCapacity && !aggValue.equals("") && !aggValue.equals("OK")){
+					return "OK"
+				} else {
+					return ""
+				}
+			},
 			(aggKey, newValue, aggValue) -> {
-				System.out.println("Add to " + aggKey + " new Value:  " + newValue + " agg Value: " + aggValue);
-				return aggValue + newValue;
+				String[] s = newValue.split("-");
+				int maxCapacity = Integer.parseInt(s[0]);
+				int currentSize = Integer.parseInt(s[1]);
+
+				if(currentSize > maxCapacity) {
+					return currentSize.toString()
+				} else if (currentSize == maxCapacity && !aggValue.equals("") && !aggValue.equals("OK")){
+					return "OK"
+				} else {
+					return ""
+				}
 			},
-			(aggKey, oldValue, aggValue) -> {
-				System.out.println("Subtract From " + aggKey + " new Value:  " + oldValue + " agg Value: " + aggValue);
-				return aggValue + oldValue;
-			},
+			(aggKey, oldValue, aggValue) -> aggValue,
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("output-store" /* state store name */)
 					.withKeySerde(Serdes.String())
 					.withValueSerde(Serdes.String())
-		)
-		.filter((classroom, value) -> {
-			String[] s = value.split("-");
-			int maxCapacity = Integer.parseInt(s[0]);
-			int currentSize = Integer.parseInt(s[1]);
-			System.out.println("Filtering " + maxCapacity + " " + currentSize);
-			if(currentSize > maxCapacity) {
-				return true;
-			}
-			return false;
-		});
+		);
 
 
 	joinedTable.toStream().to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
