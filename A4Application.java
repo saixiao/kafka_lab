@@ -102,8 +102,8 @@ public class A4Application {
 		.groupBy(
 			(classroom, capacities) -> KeyValue.pair(classroom, capacities),
 			Grouped.with(
-					Serdes.String(),
-					Serdes.String()
+				Serdes.String(),
+				Serdes.String()
 			)
 		)
 		.reduce(
@@ -121,8 +121,6 @@ public class A4Application {
 				}
 			},
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("output-store" /* state store name */)
-					.withKeySerde(Serdes.String())
-					.withValueSerde(Serdes.String())
 		)
 		.filter((classroom, result) -> result.length() != 0);
 
