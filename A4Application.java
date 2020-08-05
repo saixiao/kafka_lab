@@ -57,17 +57,17 @@ public class A4Application {
 		);
 
 	KTable<String, Integer> studentLocations = studentLocationStreams
-//		.groupByKey(
-//			Serialized.with(
-//				Serdes.String(),
-//				Serdes.String())
-//		)
-//		.reduce(
-//			(aggValue, newValue) -> {
-//				return newValue;
-//			}, /* adder */
-//			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
-//		)
+		.groupByKey(
+			Serialized.with(
+				Serdes.String(),
+				Serdes.String())
+		)
+		.reduce(
+			(aggValue, newValue) -> {
+				return newValue;
+			}, /* adder */
+			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
+		)
 		.groupBy(
 			(studentName, roomNumber) ->
 			{
@@ -123,9 +123,6 @@ public class A4Application {
 
 
 	joinedStream.to(outputTopic, Produced.with(Serdes.String(), Serdes.String()));
-
-// ...
-// ...to(outputTopic);
 
 	KafkaStreams streams = new KafkaStreams(builder.build(), props);
 
