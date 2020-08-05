@@ -65,13 +65,12 @@ public class A4Application {
 		.reduce(
 			(aggValue, newValue) -> {
 				return newValue;
-			}, /* adder */
+			},
 			Materialized.<String, String, KeyValueStore<Bytes, byte[]>>as("student-location-store")
 		)
 		.groupBy(
 			(studentName, roomNumber) ->
 			{
-				System.out.println(studentName + roomNumber);
 				return KeyValue.pair(roomNumber, 1);
 			},
 			Grouped.with(
@@ -82,11 +81,9 @@ public class A4Application {
 		.aggregate(
 			() -> 0, /* initializer */
 			(aggKey, newValue, aggValue) -> {
-				System.out.println("Add to " + aggKey);
 				return aggValue + newValue;
 			},
 			(aggKey, oldValue, aggValue) -> {
-				System.out.println("Subtract From " + aggKey);
 				return aggValue - oldValue;
 			},
 			Materialized.<String, Integer, KeyValueStore<Bytes, byte[]>>as("current-class-capacity" /* state store name */)
